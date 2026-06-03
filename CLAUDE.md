@@ -140,3 +140,23 @@ BREAKING CHANGE: migration required — run prisma:migrate
 4. Merge via **squash-and-merge** to keep `main` history linear.
 5. Delete the branch after the PR is merged.
 6. Keep branch names lowercase, hyphen-separated, no slashes beyond the type prefix.
+
+## Pull Requests
+
+Open PRs against `main` with the `gh` CLI (`gh pr create`).
+
+**Title:** follow [Conventional Commits](https://www.conventionalcommits.org/) — same `<type>(<scope>): <description>` format as commit subjects (English, imperative, lowercase, ≤ 72 chars). For a squash-merged single-feature branch the title usually mirrors the lead commit.
+
+**Description** — before writing it, run `git diff main...HEAD` to ground the summary in the actual changes. Structure the body in Markdown:
+
+- **Summary** — 1–3 sentences on what the PR delivers and why.
+- **Changes** — bullet list grouped by area (`api`, `web`, `db`, `shared`).
+- **Endpoints** — when the API surface changes, list each added/modified route as `METHOD /path` with a one-line note (auth requirements, query params, response shape).
+- **Notes** — migrations, env vars, follow-ups, or anything a reviewer must do manually. Omit if empty.
+
+**Rules:**
+
+- Push the branch with upstream tracking (`git push -u origin <branch>`) before/while opening the PR.
+- Open as a draft (`--draft`) when the work is still in progress.
+- Reference issues in the body footer: `Closes #123`.
+- Keep the description in English; user-facing app copy stays Russian per the Language section.
