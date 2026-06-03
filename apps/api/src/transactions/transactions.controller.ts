@@ -58,7 +58,13 @@ export class TransactionsController {
     @CurrentUser() user: CurrentUserPayload,
   ) {
     return this.queryBus.execute(
-      new GetUserTransactionsQuery(user.userId, query.month, query.year),
+      new GetUserTransactionsQuery(
+        user.userId,
+        query.month,
+        query.year,
+        query.page,
+        query.limit,
+      ),
     );
   }
 

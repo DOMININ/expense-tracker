@@ -14,7 +14,13 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateIf,
 } from "class-validator";
+
+/** Значения пагинации по умолчанию, общие для DTO и обработчиков запросов. */
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_LIMIT = 10;
+export const MAX_LIMIT = 100;
 
 export class RegisterDto {
   @IsString()
@@ -40,6 +46,12 @@ export class LoginDto {
 
 export class AuthResponseDto {
   accessToken!: string;
+}
+
+export class UserResponseDto {
+  id!: string;
+  name!: string;
+  email!: string;
 }
 
 const HEX_COLOR = /^#[0-9A-Fa-f]{6}$/;
@@ -144,19 +156,41 @@ export class UpdateTransactionDto {
 }
 
 export class ListTransactionsQueryDto {
-  @IsOptional()
+  // month и year — пара «всё или ничего»: если задан один из них, второй
+  // обязателен (ValidateIf запускает валидацию недостающего поля → 400).
+  @ValidateIf((o) => o.month !== undefined || o.year !== undefined)
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(12)
   month?: number;
 
-  @IsOptional()
+  @ValidateIf((o) => o.month !== undefined || o.year !== undefined)
   @Type(() => Number)
   @IsInt()
   @Min(1970)
   @Max(2100)
   year?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(MAX_LIMIT)
+  limit?: number;
+}
+
+export class CategoryRefDto {
+  id!: string;
+  name!: string;
+  color!: string;
+  icon!: string;
 }
 
 export class TransactionResponseDto {
@@ -166,6 +200,7 @@ export class TransactionResponseDto {
   description!: string;
   date!: Date;
   categoryId!: string;
+  category!: CategoryRefDto;
   userId!: string;
   createdAt!: Date;
   updatedAt!: Date;
@@ -180,4 +215,8 @@ export class TransactionTotalsDto {
 export class TransactionsListResponseDto {
   items!: TransactionResponseDto[];
   totals!: TransactionTotalsDto;
+  page!: number;
+  limit!: number;
+  total!: number;
+  totalPages!: number;
 }

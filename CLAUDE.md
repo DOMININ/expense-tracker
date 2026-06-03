@@ -117,3 +117,47 @@ feat(db)!: rename User table to Account
 
 BREAKING CHANGE: migration required — run prisma:migrate
 ```
+
+## Branching — GitHub Flow
+
+`main` is always deployable. All work happens on short-lived feature branches merged via PR.
+
+**Branch naming:** `<type>/<short-slug>`
+
+| Type | When to use | Example |
+|------|-------------|---------|
+| `feat/` | New feature | `feat/home-screen` |
+| `fix/` | Bug fix | `fix/login-redirect` |
+| `chore/` | Tooling, deps, config | `chore/bump-prisma` |
+| `refactor/` | Code restructure, no feature change | `refactor/auth-module` |
+| `docs/` | Documentation only | `docs/api-readme` |
+
+**Rules:**
+
+1. Branch off `main`. Never commit directly to `main`.
+2. One feature per branch — keep branches small and short-lived.
+3. Push the branch and open a PR when ready for review (or as a draft for early feedback).
+4. Merge via **squash-and-merge** to keep `main` history linear.
+5. Delete the branch after the PR is merged.
+6. Keep branch names lowercase, hyphen-separated, no slashes beyond the type prefix.
+
+## Pull Requests
+
+Open PRs against `main` with the `gh` CLI (`gh pr create`).
+
+**Title:** follow [Conventional Commits](https://www.conventionalcommits.org/) — same `<type>(<scope>): <description>` format as commit subjects (English, imperative, lowercase, ≤ 72 chars). For a squash-merged single-feature branch the title usually mirrors the lead commit.
+
+**Description** — before writing it, run `git diff main...HEAD` to ground the summary in the actual changes. Structure the body in Markdown:
+
+- **Summary** — 1–3 sentences on what the PR delivers and why.
+- **Changes** — bullet list grouped by area (`api`, `web`, `db`, `shared`).
+- **Endpoints** — when the API surface changes, list each added/modified route as `METHOD /path` with a one-line note (auth requirements, query params, response shape).
+- **Test plan** — required. A `- [ ]` checklist of concrete steps a reviewer can run to verify the change, grouped by area (backend/frontend) with the command to start each (`npm run dev:api` / `npm run dev:web`). Cover happy paths, validation/error cases, and auth where relevant.
+- **Notes** — migrations, env vars, follow-ups, or anything a reviewer must do manually. Omit if empty.
+
+**Rules:**
+
+- Push the branch with upstream tracking (`git push -u origin <branch>`) before/while opening the PR.
+- Open as a draft (`--draft`) when the work is still in progress.
+- Reference issues in the body footer: `Closes #123`.
+- Keep the description in English; user-facing app copy stays Russian per the Language section.

@@ -1,8 +1,21 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UnauthorizedException,
+  UseGuards,
+} from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { RegisterCommand } from "./commands/register.command";
 import { LoginQuery } from "./queries/login.query";
-import { LoginDto, RegisterDto } from "@expence-tracker/shared";
+import { GetUserByIdQuery } from "../user/queries/get-user-by-id.query";
+import { JwtAuthGuard } from "./guards/jwt.guard";
+import {
+  CurrentUser,
+  CurrentUserPayload,
+} from "./decorators/current-user.decorator";
+import { LoginDto, RegisterDto, UserResponseDto } from "@expence-tracker/shared";
 
 @Controller("auth")
 export class AuthController {
@@ -21,5 +34,16 @@ export class AuthController {
   @Post("login")
   login(@Body() dto: LoginDto): Promise<{ accessToken: string }> {
     return this.queryBus.execute(new LoginQuery(dto.email, dto.password));
+  }
+
+  @Get("me")
+  @UseGuards(JwtAuthGuard)
+  async me(@CurrentUser() user: CurrentUserPayload): Promise<UserResponseDto> {
+    const u = await this.queryBus.execute<
+      GetUserByIdQuery,
+      UserResponseDto | null
+    >(new GetUserByIdQuery(user.userId));
+    if (!u) throw new UnauthorizedException();
+    return { id: u.id, name: u.name, email: u.email };
   }
 }
