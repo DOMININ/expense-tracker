@@ -17,7 +17,19 @@ export function AuthGuard({ children }: { children: ReactNode }) {
   }, [router]);
 
   if (!checked) {
-    return null;
+    return (
+      <div
+        className="flex min-h-screen items-center justify-center"
+        role="status"
+        aria-live="polite"
+      >
+        <span
+          className="h-6 w-6 animate-spin rounded-full border-2 border-muted-foreground/30 border-t-foreground"
+          aria-hidden
+        />
+        <span className="sr-only">Загрузка…</span>
+      </div>
+    );
   }
 
   return <>{children}</>;

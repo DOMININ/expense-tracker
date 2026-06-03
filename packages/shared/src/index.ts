@@ -14,7 +14,13 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateIf,
 } from "class-validator";
+
+/** Значения пагинации по умолчанию, общие для DTO и обработчиков запросов. */
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_LIMIT = 10;
+export const MAX_LIMIT = 100;
 
 export class RegisterDto {
   @IsString()
@@ -150,14 +156,16 @@ export class UpdateTransactionDto {
 }
 
 export class ListTransactionsQueryDto {
-  @IsOptional()
+  // month и year — пара «всё или ничего»: если задан один из них, второй
+  // обязателен (ValidateIf запускает валидацию недостающего поля → 400).
+  @ValidateIf((o) => o.month !== undefined || o.year !== undefined)
   @Type(() => Number)
   @IsInt()
   @Min(1)
   @Max(12)
   month?: number;
 
-  @IsOptional()
+  @ValidateIf((o) => o.month !== undefined || o.year !== undefined)
   @Type(() => Number)
   @IsInt()
   @Min(1970)
@@ -174,7 +182,7 @@ export class ListTransactionsQueryDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  @Max(100)
+  @Max(MAX_LIMIT)
   limit?: number;
 }
 

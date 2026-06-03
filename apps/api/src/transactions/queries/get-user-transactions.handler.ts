@@ -1,5 +1,12 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import type { Prisma } from "@expence-tracker/db";
+import {
+  DEFAULT_LIMIT,
+  DEFAULT_PAGE,
+  TransactionType,
+  type TransactionResponseDto,
+  type TransactionsListResponseDto,
+} from "@expence-tracker/shared";
 import { PrismaService } from "../../prisma/prisma.service";
 import { GetUserTransactionsQuery } from "./get-user-transactions.query";
 
@@ -9,9 +16,11 @@ export class GetUserTransactionsHandler
 {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(query: GetUserTransactionsQuery) {
-    const page = Number(query.page) || 1;
-    const limit = Number(query.limit) || 10;
+  async execute(
+    query: GetUserTransactionsQuery,
+  ): Promise<TransactionsListResponseDto> {
+    const page = Number(query.page) || DEFAULT_PAGE;
+    const limit = Number(query.limit) || DEFAULT_LIMIT;
     const skip = (page - 1) * limit;
 
     const where: Prisma.TransactionWhereInput = { userId: query.userId };
@@ -45,16 +54,25 @@ export class GetUserTransactionsHandler
       grouped.find((g) => g.type === "EXPENSE")?._sum.amount?.toNumber() ?? 0;
 
     return {
-      items: items.map((t) => ({
-        ...t,
-        amount: t.amount.toNumber(),
-        category: {
-          id: t.category.id,
-          name: t.category.name,
-          color: t.category.color,
-          icon: t.category.icon,
-        },
-      })),
+      items: items.map(
+        (t): TransactionResponseDto => ({
+          id: t.id,
+          amount: t.amount.toNumber(),
+          type: t.type as TransactionType,
+          description: t.description,
+          date: t.date,
+          categoryId: t.categoryId,
+          category: {
+            id: t.category.id,
+            name: t.category.name,
+            color: t.category.color,
+            icon: t.category.icon,
+          },
+          userId: t.userId,
+          createdAt: t.createdAt,
+          updatedAt: t.updatedAt,
+        }),
+      ),
       totals: {
         income,
         expense,
