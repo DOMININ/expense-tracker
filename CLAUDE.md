@@ -117,3 +117,26 @@ feat(db)!: rename User table to Account
 
 BREAKING CHANGE: migration required — run prisma:migrate
 ```
+
+## Branching — GitHub Flow
+
+`main` is always deployable. All work happens on short-lived feature branches merged via PR.
+
+**Branch naming:** `<type>/<short-slug>`
+
+| Type | When to use | Example |
+|------|-------------|---------|
+| `feat/` | New feature | `feat/home-screen` |
+| `fix/` | Bug fix | `fix/login-redirect` |
+| `chore/` | Tooling, deps, config | `chore/bump-prisma` |
+| `refactor/` | Code restructure, no feature change | `refactor/auth-module` |
+| `docs/` | Documentation only | `docs/api-readme` |
+
+**Rules:**
+
+1. Branch off `main`. Never commit directly to `main`.
+2. One feature per branch — keep branches small and short-lived.
+3. Push the branch and open a PR when ready for review (or as a draft for early feedback).
+4. Merge via **squash-and-merge** to keep `main` history linear.
+5. Delete the branch after the PR is merged.
+6. Keep branch names lowercase, hyphen-separated, no slashes beyond the type prefix.

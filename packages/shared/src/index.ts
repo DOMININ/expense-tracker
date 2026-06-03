@@ -42,6 +42,12 @@ export class AuthResponseDto {
   accessToken!: string;
 }
 
+export class UserResponseDto {
+  id!: string;
+  name!: string;
+  email!: string;
+}
+
 const HEX_COLOR = /^#[0-9A-Fa-f]{6}$/;
 
 export class CreateCategoryDto {
@@ -157,6 +163,26 @@ export class ListTransactionsQueryDto {
   @Min(1970)
   @Max(2100)
   year?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit?: number;
+}
+
+export class CategoryRefDto {
+  id!: string;
+  name!: string;
+  color!: string;
+  icon!: string;
 }
 
 export class TransactionResponseDto {
@@ -166,6 +192,7 @@ export class TransactionResponseDto {
   description!: string;
   date!: Date;
   categoryId!: string;
+  category!: CategoryRefDto;
   userId!: string;
   createdAt!: Date;
   updatedAt!: Date;
@@ -180,4 +207,8 @@ export class TransactionTotalsDto {
 export class TransactionsListResponseDto {
   items!: TransactionResponseDto[];
   totals!: TransactionTotalsDto;
+  page!: number;
+  limit!: number;
+  total!: number;
+  totalPages!: number;
 }
