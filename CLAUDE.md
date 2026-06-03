@@ -152,6 +152,7 @@ Open PRs against `main` with the `gh` CLI (`gh pr create`).
 - **Summary** — 1–3 sentences on what the PR delivers and why.
 - **Changes** — bullet list grouped by area (`api`, `web`, `db`, `shared`).
 - **Endpoints** — when the API surface changes, list each added/modified route as `METHOD /path` with a one-line note (auth requirements, query params, response shape).
+- **Test plan** — required. A `- [ ]` checklist of concrete steps a reviewer can run to verify the change, grouped by area (backend/frontend) with the command to start each (`npm run dev:api` / `npm run dev:web`). Cover happy paths, validation/error cases, and auth where relevant.
 - **Notes** — migrations, env vars, follow-ups, or anything a reviewer must do manually. Omit if empty.
 
 **Rules:**
