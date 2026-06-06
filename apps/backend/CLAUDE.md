@@ -143,17 +143,21 @@ supplies the shared ones (Prisma + JWT). Copy and fill before `npm run dev:backe
 
 ## Swagger & JSDoc
 
-**Swagger is not wired up yet** — `@nestjs/swagger` is not a dependency. When the
-API surface is documented:
+**Swagger is wired up** (`@nestjs/swagger`). `main.ts` builds the spec with
+`DocumentBuilder` (`.addBearerAuth()` for JWT) and serves the UI at **`/docs`**.
 
-- Add `@nestjs/swagger`, set up `SwaggerModule` in `main.ts`, and keep the spec in
-  sync with the routes. **Any PR that adds, removes or changes a route or DTO must
-  update the corresponding Swagger decorators** (`@ApiTags`, `@ApiOperation`,
-  `@ApiResponse`, `@ApiBearerAuth` on JWT-protected routes) and the response/body
-  DTOs in `@expence-tracker/shared`. The Swagger UI is the source of truth for the
-  HTTP contract — a route change with stale docs is an incomplete change.
-- Until then, the route table above and the DTOs in `packages/shared/src/index.ts`
-  are the contract; keep both current when the surface changes.
+- **Any PR that adds, removes or changes a route or DTO must update the
+  corresponding Swagger decorators** (`@ApiTags`, `@ApiOperation`, `@ApiResponse`,
+  `@ApiBearerAuth` on JWT-protected routes) and the response/body DTOs in
+  `@expence-tracker/shared`. The Swagger UI is the source of truth for the HTTP
+  contract — a route change with stale docs is an incomplete change.
+- `TransactionsController`, `AuthController` and `CategoriesController` are
+  annotated. `AppController` (`/health`) is not — follow the same pattern if you
+  add user-facing routes there.
+- Response/body DTOs in `packages/shared/src/index.ts` are plain classes without
+  `@ApiProperty`, so their schemas show by name but with empty bodies. Add
+  `@ApiProperty` to a DTO (or enable the `@nestjs/swagger` CLI plugin) when you need
+  the field-level schema to render.
 
 **JSDoc.** Document the *why*, not the *what*. Add JSDoc/inline comments on
 non-obvious logic (e.g. the all-or-nothing `month`/`year` validation in
@@ -162,3 +166,13 @@ non-obvious logic (e.g. the all-or-nothing `month`/`year` validation in
 `@expence-tracker/shared`. Comments are written in Russian to match the existing
 code; keep them accurate when you change the code they describe — a stale comment
 is worse than none.
+
+## Documentation
+
+Docs travel with the code — a change isn't done until they match.
+
+- **After changing a method** — update its JSDoc (description, `@param`,
+  `@returns`, `@throws`) so it still reflects the signature and behaviour.
+- **For DTOs and controllers** — add or update the Swagger decorators
+  (`@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiBearerAuth`, `@ApiProperty`)
+  so the `/docs` spec stays in sync with the route and payload shape.
