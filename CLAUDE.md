@@ -75,6 +75,23 @@ Root `.env` (read by Prisma and the backend) declares `DATABASE_URL` and
 `JWT_SECRET`. Per-app `.env.example` files document the rest — copy them before
 local dev. See each workspace's CLAUDE.md for the full variable list.
 
+## Documentation
+
+[`README.md`](README.md) is the project's front door — keep it in sync with the
+code. Whenever a change touches something the README states, update the README in
+the **same** change. In particular, revisit it when you:
+
+- add, remove or rename a **workspace, dependency or part of the stack** (Стек table);
+- change the **setup flow** — install steps, env vars, Docker/DB, migrations, dev commands;
+- add, remove or move a **top-level directory** (project-structure tree);
+- add, change or remove an **API endpoint** (endpoints table — keep it and the
+  backend's route table / Swagger decorators consistent);
+- bump the **minimum Node version** or other hard requirements.
+
+A change that leaves the README describing how things *used* to work is incomplete.
+For backend-internal docs (JSDoc, Swagger), see
+[`apps/backend/CLAUDE.md`](apps/backend/CLAUDE.md).
+
 ## Language
 
 User-facing copy defaults to **Russian** (frontend specifics in
