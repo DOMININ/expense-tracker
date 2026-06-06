@@ -7,10 +7,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev:web": "npm run dev -w apps/web",
-    "dev:api": "npm run start:dev -w apps/api",
-    "build:web": "npm run build -w apps/web",
-    "build:api": "npm run build -w apps/api",
+    "dev:frontend": "npm run dev -w apps/frontend",
+    "dev:backend": "npm run start:dev -w apps/backend",
+    "build:frontend": "npm run build -w apps/frontend",
+    "build:backend": "npm run build -w apps/backend",
     "prisma:generate": "npm run prisma:generate -w packages/db",
     "prisma:migrate": "npm run prisma:migrate -w packages/db",
     "prisma:studio": "npm run prisma:studio -w packages/db"
