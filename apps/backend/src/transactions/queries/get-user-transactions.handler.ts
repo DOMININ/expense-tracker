@@ -10,12 +10,29 @@ import {
 import { PrismaService } from "../../prisma/prisma.service";
 import { GetUserTransactionsQuery } from "./get-user-transactions.query";
 
+/**
+ * Обработчик {@link GetUserTransactionsQuery}: возвращает постранично список
+ * транзакций пользователя с опциональным фильтром по месяцу и сводкой по
+ * доходам/расходам/балансу.
+ */
 @QueryHandler(GetUserTransactionsQuery)
 export class GetUserTransactionsHandler
   implements IQueryHandler<GetUserTransactionsQuery>
 {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Возвращает страницу транзакций пользователя вместе со сводкой.
+   *
+   * Параллельно выполняет три запроса: выборку страницы (сортировка по дате
+   * убыв., с категориями), общий счётчик и агрегацию сумм по типу операции
+   * (`groupBy` + `_sum`). Фильтр по дате применяется только если переданы
+   * оба параметра — `month` и `year` (диапазон считается в UTC).
+   * Все `Decimal`-суммы приводятся к `number`.
+   *
+   * @param query Параметры выборки: пользователь, фильтр по месяцу и пагинация.
+   * @returns Список транзакций, сводка (`income`/`expense`/`balance`) и метаданные пагинации (`page`, `limit`, `total`, `totalPages`).
+   */
   async execute(
     query: GetUserTransactionsQuery,
   ): Promise<TransactionsListResponseDto> {

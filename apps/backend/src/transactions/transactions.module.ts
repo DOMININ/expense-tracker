@@ -8,6 +8,12 @@ import { DeleteTransactionHandler } from "./commands/delete-transaction.handler"
 import { GetUserTransactionsHandler } from "./queries/get-user-transactions.handler";
 import { GetTransactionByIdHandler } from "./queries/get-transaction-by-id.handler";
 
+/**
+ * Модуль транзакций. Регистрирует {@link TransactionsController} и CQRS-хендлеры
+ * команд/запросов. Импортирует `CqrsModule` (шины команд/запросов) и `UserModule`
+ * (чтобы {@link CreateTransactionHandler} мог проверять пользователя через
+ * `GetUserByIdQuery`). `PrismaService` доступен глобально из `PrismaModule`.
+ */
 @Module({
   imports: [CqrsModule, UserModule],
   controllers: [TransactionsController],

@@ -7,6 +7,12 @@ import { UpdateCategoryHandler } from "./commands/update-category.handler";
 import { DeleteCategoryHandler } from "./commands/delete-category.handler";
 import { GetUserCategoriesHandler } from "./queries/get-user-categories.handler";
 
+/**
+ * Модуль категорий. Регистрирует {@link CategoriesController} и CQRS-хендлеры
+ * CRUD-операций над категориями пользователя. Импортирует `CqrsModule` (шины)
+ * и `UserModule` (чтобы {@link CreateCategoryHandler} мог проверять пользователя
+ * через `GetUserByIdQuery`). `PrismaService` доступен глобально из `PrismaModule`.
+ */
 @Module({
   imports: [CqrsModule, UserModule],
   controllers: [CategoriesController],

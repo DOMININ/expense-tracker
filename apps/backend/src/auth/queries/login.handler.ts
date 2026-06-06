@@ -5,6 +5,9 @@ import * as bcrypt from "bcrypt";
 import { LoginQuery } from "./login.query";
 import { GetUserByEmailQuery } from "../../user/queries/get-user-by-email.query";
 
+/**
+ * Обработчик {@link LoginQuery}: проверяет email и пароль, при успехе выдаёт JWT.
+ */
 @QueryHandler(LoginQuery)
 export class LoginHandler implements IQueryHandler<LoginQuery> {
   constructor(
@@ -12,6 +15,17 @@ export class LoginHandler implements IQueryHandler<LoginQuery> {
     private readonly jwtService: JwtService,
   ) {}
 
+  /**
+   * Аутентифицирует пользователя и возвращает токен доступа.
+   *
+   * Ищет пользователя по email через `GetUserByEmailQuery` и сверяет пароль
+   * через `bcrypt.compare`. На отсутствие пользователя и на неверный пароль
+   * отдаётся одинаковая ошибка — чтобы не раскрывать, существует ли email.
+   *
+   * @param query Email и пароль в открытом виде.
+   * @returns Объект с токеном доступа `{ accessToken }`.
+   * @throws {UnauthorizedException} Если email не найден или пароль неверный.
+   */
   async execute(query: LoginQuery) {
     const user = await this.queryBus.execute(
       new GetUserByEmailQuery(query.email),

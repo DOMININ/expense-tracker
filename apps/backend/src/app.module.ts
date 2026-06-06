@@ -7,6 +7,11 @@ import { AuthModule } from "./auth/auth.module";
 import { CategoriesModule } from "./categories/categories.module";
 import { TransactionsModule } from "./transactions/transactions.module";
 
+/**
+ * Корневой модуль приложения. Собирает воедино все фичевые модули
+ * (`User`, `Auth`, `Categories`, `Transactions`) и глобальный `PrismaModule`,
+ * а также регистрирует `AppController` с маршрутом `/health`.
+ */
 @Module({
   imports: [
     PrismaModule,
