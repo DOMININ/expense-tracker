@@ -20,35 +20,35 @@ API сейчас — минимальный скаффолд с одним `GET 
 - [x] Запустить `npm run prisma:generate`
 
 ### PrismaModule
-- [x] Создать `apps/api/src/prisma/prisma.service.ts` (extends PrismaClient, implements OnModuleInit)
-- [x] Создать `apps/api/src/prisma/prisma.module.ts` (Global, экспортирует PrismaService)
+- [x] Создать `apps/backend/src/prisma/prisma.service.ts` (extends PrismaClient, implements OnModuleInit)
+- [x] Создать `apps/backend/src/prisma/prisma.module.ts` (Global, экспортирует PrismaService)
 
 ### UserModule (CQRS)
-- [x] `apps/api/src/user/commands/create-user.command.ts`
-- [x] `apps/api/src/user/commands/create-user.handler.ts` (PrismaService → prisma.user.create)
-- [x] `apps/api/src/user/queries/get-user-by-email.query.ts`
-- [x] `apps/api/src/user/queries/get-user-by-email.handler.ts` (PrismaService → prisma.user.findUnique)
-- [x] `apps/api/src/user/user.module.ts` (импортирует CqrsModule + PrismaModule, регистрирует handlers, экспортирует CqrsModule)
+- [x] `apps/backend/src/user/commands/create-user.command.ts`
+- [x] `apps/backend/src/user/commands/create-user.handler.ts` (PrismaService → prisma.user.create)
+- [x] `apps/backend/src/user/queries/get-user-by-email.query.ts`
+- [x] `apps/backend/src/user/queries/get-user-by-email.handler.ts` (PrismaService → prisma.user.findUnique)
+- [x] `apps/backend/src/user/user.module.ts` (импортирует CqrsModule + PrismaModule, регистрирует handlers, экспортирует CqrsModule)
 
 ### Shared DTOs
 - [x] Добавить `RegisterDto`, `LoginDto`, `AuthResponseDto` в `packages/shared/src/index.ts`
 
 ### AuthModule (CQRS + JWT)
-- [x] `apps/api/src/auth/commands/register.command.ts`
-- [x] `apps/api/src/auth/commands/register.handler.ts` (bcrypt.hash → CreateUserCommand → JwtService.sign)
-- [x] `apps/api/src/auth/queries/login.query.ts`
-- [x] `apps/api/src/auth/queries/login.handler.ts` (GetUserByEmailQuery → bcrypt.compare → JwtService.sign)
-- [x] `apps/api/src/auth/guards/jwt.strategy.ts` (PassportStrategy, валидирует Bearer)
-- [x] `apps/api/src/auth/guards/jwt.guard.ts` (extends AuthGuard('jwt'))
-- [x] `apps/api/src/auth/auth.controller.ts` (POST /auth/register, POST /auth/login)
-- [x] `apps/api/src/auth/auth.module.ts` (CqrsModule, UserModule, JwtModule, PassportModule)
+- [x] `apps/backend/src/auth/commands/register.command.ts`
+- [x] `apps/backend/src/auth/commands/register.handler.ts` (bcrypt.hash → CreateUserCommand → JwtService.sign)
+- [x] `apps/backend/src/auth/queries/login.query.ts`
+- [x] `apps/backend/src/auth/queries/login.handler.ts` (GetUserByEmailQuery → bcrypt.compare → JwtService.sign)
+- [x] `apps/backend/src/auth/guards/jwt.strategy.ts` (PassportStrategy, валидирует Bearer)
+- [x] `apps/backend/src/auth/guards/jwt.guard.ts` (extends AuthGuard('jwt'))
+- [x] `apps/backend/src/auth/auth.controller.ts` (POST /auth/register, POST /auth/login)
+- [x] `apps/backend/src/auth/auth.module.ts` (CqrsModule, UserModule, JwtModule, PassportModule)
 
 ### Сборка
-- [x] Подключить `PrismaModule`, `UserModule`, `AuthModule` в `apps/api/src/app.module.ts`
+- [x] Подключить `PrismaModule`, `UserModule`, `AuthModule` в `apps/backend/src/app.module.ts`
 
 ### Проверка
-- [x] `npm run typecheck -w apps/api` — без ошибок
-- [x] `npm run dev:api` — сервер стартует
+- [x] `npm run typecheck -w apps/backend` — без ошибок
+- [x] `npm run dev:backend` — сервер стартует
 - [x] `POST /auth/register` → `{ accessToken }`
 - [x] `POST /auth/login` → `{ accessToken }`
 - [x] Повторный register с тем же email → 409 Conflict

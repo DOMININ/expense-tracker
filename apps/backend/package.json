@@ -1,5 +1,5 @@
 {
-  "name": "@expence-tracker/api",
+  "name": "@expence-tracker/backend",
   "version": "0.0.0",
   "private": true,
   "scripts": {

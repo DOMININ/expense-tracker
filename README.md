@@ -5,8 +5,8 @@ Monorepo для трекера расходов.
 ## Стек
 
 - **Monorepo:** npm workspaces
-- **Frontend:** Next.js (App Router) + TypeScript + Tailwind CSS — `apps/web`
-- **Backend:** Nest.js + TypeScript — `apps/api`
+- **Frontend:** Next.js (App Router) + TypeScript + Tailwind CSS — `apps/frontend`
+- **Backend:** Nest.js + TypeScript — `apps/backend`
 - **БД:** PostgreSQL + Prisma — `packages/db`
 - **Общие типы:** `packages/shared`
 
@@ -14,8 +14,8 @@ Monorepo для трекера расходов.
 
 ```
 apps/
-  web/      # Next.js
-  api/      # Nest.js
+  frontend/   # Next.js
+  backend/    # Nest.js
 packages/
   db/       # Prisma schema + client
   shared/   # общие типы/DTO
@@ -26,4 +26,4 @@ packages/
 1. `npm install` в корне.
 2. Описать модели в `packages/db/prisma/schema.prisma`.
 3. `npm run prisma:migrate -- --name init`.
-4. `npm run dev:api` и `npm run dev:web`.
+4. `npm run dev:backend` и `npm run dev:frontend`.
