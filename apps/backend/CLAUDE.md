@@ -37,21 +37,9 @@ can dispatch user queries through the shared `QueryBus`.
 
 ## API surface today
 
-| Method & path           | Auth | Notes                                                                            |
-| ----------------------- | ---- | -------------------------------------------------------------------------------- |
-| `GET /health`           | —    | `{ status }` liveness check.                                                     |
-| `POST /auth/register`   | —    | Body `RegisterDto` → `{ accessToken }`.                                          |
-| `POST /auth/login`      | —    | Body `LoginDto` → `{ accessToken }`.                                             |
-| `GET /auth/me`          | JWT  | Current user → `UserResponseDto`.                                                |
-| `GET /categories`       | JWT  | List the user's categories.                                                      |
-| `POST /categories`      | JWT  | Body `CreateCategoryDto`.                                                        |
-| `PATCH /categories/:id` | JWT  | Body `UpdateCategoryDto`.                                                         |
-| `DELETE /categories/:id`| JWT  | `204 No Content`.                                                                 |
-| `GET /transactions`     | JWT  | Query `ListTransactionsQueryDto` (`month`+`year` all-or-nothing, `page`, `limit`) → list + totals. |
-| `GET /transactions/:id` | JWT  | Single transaction.                                                              |
-| `POST /transactions`    | JWT  | Body `CreateTransactionDto`.                                                      |
-| `PATCH /transactions/:id`| JWT | Body `UpdateTransactionDto`.                                                      |
-| `DELETE /transactions/:id`| JWT| `204 No Content`.                                                                 |
+The full endpoint reference — every route with its DTOs, validation rules and
+responses — lives in [`.claude/docs/api.md`](../../.claude/docs/api.md). Keep it in
+sync with the controllers and Swagger decorators whenever a route changes.
 
 JWT is returned as `{ accessToken }` in the response body and sent back as a
 `Bearer` token (7-day expiry).
@@ -101,17 +89,9 @@ error codes into Nest HTTP exceptions in the handler (e.g. unique-constraint `P2
 ## Prisma & database
 
 Schema lives at `packages/db/prisma/schema.prisma` (PostgreSQL, `DATABASE_URL`).
-Models:
-
-- **User** — `id` (cuid), `name`, `email` (unique), `passwordHash`, timestamps;
-  has many `categories` and `transactions`.
-- **Category** — `id`, `name`, `color` (hex), `icon`, `userId`; `@@unique([userId, name])`,
-  `@@index([userId])`; `onDelete: Cascade` from user.
-- **Transaction** — `id`, `amount` (`Decimal(12,2)`), `type` (`TransactionType`
-  enum `INCOME`/`EXPENSE`), `description`, `date`, `categoryId`, `userId`;
-  indexes on `[userId]`, `[userId, date]`, `[userId, categoryId]`. Category
-  relation is `onDelete: Restrict` (can't delete a category still in use); user is
-  `onDelete: Cascade`.
+The full model reference (fields, relations, indexes, `onDelete` policies and
+migration history) is in [`.claude/docs/database.md`](../../.claude/docs/database.md) —
+keep it in sync when you edit the schema.
 
 **Decimal handling.** `amount` is a Prisma `Decimal` in the DB — convert with
 `.toNumber()` before returning it in a response DTO (see

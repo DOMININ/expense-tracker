@@ -11,18 +11,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Expence Tracker — приложение для учёта личных доходов и расходов. Пользователь
-регистрируется, заводит категории трат и записывает транзакции (доход/расход),
-видит список операций за месяц и сводку по балансу.
+Expence Tracker is a personal income/expense tracker: users register, create
+spending categories, record income/expense transactions, and see their monthly
+operations with a balance summary.
 
-Реализовано сегодня:
-
-- **Auth** — регистрация, вход (JWT, 7 дней), `GET /auth/me`.
-- **Categories** — CRUD категорий, привязанных к пользователю.
-- **Transactions** — CRUD транзакций с фильтром по месяцу, пагинацией и сводкой
-  (доход / расход / баланс).
-- **Frontend** — страницы входа/регистрации, домашний экран с последними
-  транзакциями и категориями, создание категорий и транзакций.
+For the current feature set and setup see [`README.md`](README.md); for how the
+system is built see [`.claude/docs/architecture.md`](.claude/docs/architecture.md).
 
 ## Tech stack
 
@@ -91,6 +85,19 @@ the **same** change. In particular, revisit it when you:
 A change that leaves the README describing how things *used* to work is incomplete.
 For backend-internal docs (JSDoc, Swagger), see
 [`apps/backend/CLAUDE.md`](apps/backend/CLAUDE.md).
+
+### Reference docs (`.claude/docs/`)
+
+Deeper reference material lives in [`.claude/docs/`](.claude/docs/):
+
+- [`architecture.md`](.claude/docs/architecture.md) — layers, modules, patterns.
+- [`api.md`](.claude/docs/api.md) — every endpoint with DTOs and responses.
+- [`database.md`](.claude/docs/database.md) — schema, fields, relations, migrations.
+- [`dev-guide.md`](.claude/docs/dev-guide.md) — how to add a module, feature or migration.
+
+When adding functionality, consult `.claude/docs/*` first. Keep these files current
+when you change the architecture or API — a change that leaves them describing how
+things *used* to work is incomplete.
 
 ## Language
 
