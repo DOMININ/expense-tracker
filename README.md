@@ -81,9 +81,11 @@ npm run prisma:studio        # Prisma Studio (GUI к БД)
 npm run prisma:migrate -- --name <name>   # создать + применить dev-миграцию
 npm run typecheck -w <workspace>          # tsc --noEmit в воркспейсе
 npm run lint -w apps/frontend             # next lint
+npm test -w apps/frontend                 # Jest unit-тесты (apps/frontend)
 ```
 
-> Тест-раннер пока не подключён ни в одном воркспейсе.
+> Юнит-тесты подключены во `apps/frontend` (Jest + Testing Library); в остальных
+> воркспейсах тест-раннер пока не настроен.
 
 ## Структура проекта
 
