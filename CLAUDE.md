@@ -131,46 +131,10 @@ merged via PR.
 
 ## Commit conventions
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/) — `<type>(<scope>): <description>`.
-
-**Types:**
-
-| Type       | When to use                                      |
-| ---------- | ------------------------------------------------ |
-| `feat`     | New user-facing feature                          |
-| `fix`      | Bug fix                                          |
-| `refactor` | Code change that is neither a fix nor a feature  |
-| `style`    | Formatting, whitespace — no logic change         |
-| `docs`     | Documentation only (CLAUDE.md, README, comments) |
-| `chore`    | Build scripts, deps, config, tooling             |
-| `ci`       | CI/CD pipeline changes                           |
-| `test`     | Adding or fixing tests                           |
-
-**Scopes** (optional, match workspace/package):
-
-- `frontend` — `apps/frontend`
-- `backend` — `apps/backend`
-- `db` — `packages/db`
-- `shared` — `packages/shared`
-
-**Rules:**
-
-- Description in English, imperative mood, lowercase, no trailing period.
-- Subject line ≤ 72 characters.
-- Breaking changes: append `!` after type/scope (`feat(backend)!:`) **and** add a `BREAKING CHANGE:` footer.
-- Reference issues in the footer: `Closes #123`.
-
-**Examples:**
-
-```
-feat(backend): add JWT auth endpoints
-fix(frontend): prevent double form submission on login
-chore: bump prisma to 5.14
-docs: add commit conventions to CLAUDE.md
-feat(db)!: rename User table to Account
-
-BREAKING CHANGE: migration required — run prisma:migrate
-```
+Commit conventions live in the **`commit` skill**
+([`.claude/skills/commit/SKILL.md`](.claude/skills/commit/SKILL.md)) — types,
+scopes, subject formatting, and breaking-change / issue-reference footers. Invoke
+`/commit` (or follow that skill) when writing commit messages.
 
 ## Pull Requests
 
