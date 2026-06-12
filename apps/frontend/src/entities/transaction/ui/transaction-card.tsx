@@ -1,48 +1,57 @@
 import { cn } from "@/shared/lib/utils";
+import { formatDate, formatMoney } from "@/shared/lib/format";
+import { Badge } from "@/shared/ui/badge";
 import type { Transaction } from "../model/types";
 
-const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-});
-
-const amountFormatter = new Intl.NumberFormat("ru-RU", {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
+/** Shared grid template — keep in sync with the table header in RecentTransactions. */
+export const TRANSACTION_ROW_GRID =
+  "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:grid-cols-[minmax(0,1fr)_130px_120px_140px]";
 
 export function TransactionCard({ transaction }: { transaction: Transaction }) {
   const isIncome = transaction.type === "INCOME";
-  const sign = isIncome ? "+" : "−";
 
   return (
-    <div className="flex items-center gap-3 py-3">
-      <div
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base"
-        style={{ backgroundColor: `${transaction.category.color}33` }}
-        aria-hidden
-      >
-        <span>{transaction.category.icon}</span>
+    <div className={cn(TRANSACTION_ROW_GRID, "py-3")}>
+      {/* Операция */}
+      <div className="flex min-w-0 items-center gap-3">
+        <span
+          className="flex size-10 shrink-0 items-center justify-center rounded-full text-base"
+          style={{ backgroundColor: `${transaction.category.color}22` }}
+          aria-hidden
+        >
+          {transaction.category.icon}
+        </span>
+        <div className="min-w-0">
+          <p className="truncate font-semibold leading-tight">
+            {transaction.description}
+          </p>
+          <p className="truncate text-sm text-muted-foreground">
+            {transaction.category.name}
+          </p>
+        </div>
       </div>
 
-      <div className="min-w-0 flex-1">
-        <p className="truncate font-medium leading-tight">
-          {transaction.description}
-        </p>
-        <p className="truncate text-sm text-muted-foreground">
-          {transaction.category.name} · {dateFormatter.format(new Date(transaction.date))}
-        </p>
+      {/* Дата */}
+      <div className="hidden text-sm text-muted-foreground sm:block">
+        {formatDate(transaction.date)}
       </div>
 
+      {/* Тип */}
+      <div className="hidden sm:block">
+        <Badge variant={isIncome ? "success" : "neutral"} dot>
+          {isIncome ? "Доход" : "Расход"}
+        </Badge>
+      </div>
+
+      {/* Сумма */}
       <div
         className={cn(
-          "shrink-0 font-semibold tabular-nums",
-          isIncome ? "text-green-600" : "text-red-600",
+          "text-right font-semibold tabular-nums",
+          isIncome ? "text-success" : "text-foreground",
         )}
       >
-        {sign}
-        {amountFormatter.format(Math.abs(transaction.amount))}
+        {isIncome ? "+" : "−"}
+        {formatMoney(Math.abs(transaction.amount))}
       </div>
     </div>
   );

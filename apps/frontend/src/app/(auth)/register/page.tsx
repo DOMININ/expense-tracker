@@ -13,7 +13,9 @@ export default function RegisterPage() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Регистрация</CardTitle>
+        <CardTitle className="font-display text-2xl tracking-tight">
+          Регистрация
+        </CardTitle>
         <CardDescription>Создайте аккаунт для отслеживания расходов</CardDescription>
       </CardHeader>
       <CardContent>

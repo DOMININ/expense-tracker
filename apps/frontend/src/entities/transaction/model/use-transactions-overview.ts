@@ -1,44 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  getTransactionsPage,
-  useTransactionsRefreshVersion,
-  type TransactionsPage,
-} from "@/entities/transaction";
+import { getTransactionsPage } from "../api/get-transactions";
+import type { TransactionsPage } from "./types";
+import { useTransactionsRefreshVersion } from "./transactions-refresh";
 import { sessionModel, useUnauthorizedHandler } from "@/entities/session";
 
-const LIMIT = 10;
-
-interface RecentTransactionsState {
+interface TransactionsOverviewState {
   data: TransactionsPage | null;
   loading: boolean;
   error: string | null;
-  page: number;
-  setPage: (page: number) => void;
-  refetch: () => void;
 }
 
-export function useRecentTransactions(): RecentTransactionsState {
+/**
+ * Загружает первую страницу транзакций ради сводки (`totals`) и нескольких
+ * последних операций. Используется виджетами баланса и статистики на дашборде.
+ */
+export function useTransactionsOverview(
+  limit = 6,
+): TransactionsOverviewState {
   const handleUnauthorized = useUnauthorizedHandler();
   const version = useTransactionsRefreshVersion();
   const [data, setData] = useState<TransactionsPage | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
-  const [reloadKey, setReloadKey] = useState(0);
-
-  const refetch = () => {
-    setPage(1);
-    setReloadKey((k) => k + 1);
-  };
 
   useEffect(() => {
     let active = true;
     setLoading(true);
     setError(null);
 
-    getTransactionsPage(sessionModel.getToken(), { page, limit: LIMIT })
+    getTransactionsPage(sessionModel.getToken(), { page: 1, limit })
       .then((res) => {
         if (active) setData(res);
       })
@@ -46,7 +38,7 @@ export function useRecentTransactions(): RecentTransactionsState {
         if (!active) return;
         if (handleUnauthorized(e)) return;
         setError(
-          e instanceof Error ? e.message : "Не удалось загрузить транзакции",
+          e instanceof Error ? e.message : "Не удалось загрузить данные",
         );
       })
       .finally(() => {
@@ -56,7 +48,7 @@ export function useRecentTransactions(): RecentTransactionsState {
     return () => {
       active = false;
     };
-  }, [page, reloadKey, version, handleUnauthorized]);
+  }, [limit, version, handleUnauthorized]);
 
-  return { data, loading, error, page, setPage, refetch };
+  return { data, loading, error };
 }

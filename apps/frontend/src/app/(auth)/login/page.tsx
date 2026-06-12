@@ -13,7 +13,9 @@ export default function LoginPage() {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>Вход</CardTitle>
+        <CardTitle className="font-display text-2xl tracking-tight">
+          Вход
+        </CardTitle>
         <CardDescription>Введите данные для входа в аккаунт</CardDescription>
       </CardHeader>
       <CardContent>

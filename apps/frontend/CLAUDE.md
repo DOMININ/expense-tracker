@@ -11,11 +11,21 @@ npm run dev:frontend                 # next dev (from repo root, :3000)
 npm run build:frontend               # next build
 npm run lint -w apps/frontend        # next lint
 npm run typecheck -w apps/frontend   # tsc --noEmit
+npm test -w apps/frontend            # Jest unit tests
 ```
 
 Needs the backend running (`npm run dev:backend`) for live data. `next.config.mjs`
 sets `reactStrictMode` and `transpilePackages: ["@expence-tracker/shared"]` so the
 shared DTOs are consumed from source.
+
+## Unit tests
+
+Unit tests run on **Jest** (`jest.config.ts`) with `ts-jest`, the `jsdom`
+environment and `@testing-library/react` + `@testing-library/jest-dom` (loaded via
+`jest.setup.ts`). Specs sit next to the source as `*.test.tsx` (`*.test.ts` for
+non-component modules). The `@/*` and `@expence-tracker/*` path aliases are mapped in
+`moduleNameMapper`, so imports resolve the same as in app code. Run with
+`npm test -w apps/frontend`.
 
 ## Language
 
@@ -40,14 +50,15 @@ Layers, top to bottom — **imports only ever go downward**:
 ```
 src/
 ├── app/        # Next.js App Router — routing only; thin pages that compose lower layers
-├── widgets/    # Composite UI blocks: app-header, category-list, recent-transactions
+├── widgets/    # Composite UI blocks: app-sidebar, app-header, balance-overview,
+│               # quick-actions, statistics-panel, recent-transactions, category-list
 ├── features/   # User actions: auth, create-category, create-transaction
 ├── entities/   # Domain objects: session, user, category, transaction
 └── shared/     # Framework-agnostic building blocks
     ├── api/    # Base fetch client (apiGet / apiPost, ApiError)
     ├── config/ # Runtime config (API_URL from env)
     ├── lib/    # Utilities (cn from clsx + tailwind-merge)
-    └── ui/     # shadcn/ui components (button, card, checkbox, form, input, label, modal, select)
+    └── ui/     # shadcn/ui components (badge, button, card, checkbox, form, input, label, modal, select)
 ```
 
 **Slice shape.** Each slice (inside `entities`/`features`/`widgets`) is organised
@@ -80,6 +91,22 @@ shared packages' source.
 
 > Note: this `tsconfig` inherits `noUncheckedIndexedAccess: true` from the base
 > config (unlike the backend, which disables it) — guard array/record index access.
+
+## Typography & theme
+
+Fonts are loaded via `next/font/google` in `src/app/layout.tsx` and exposed as CSS
+variables consumed by `tailwind.config.ts` (`font-sans` / `font-display`):
+
+- **Onest** (`--font-sans`) — body and all UI text. Chosen because it ships the full
+  **Cyrillic** subset (the UI is Russian); use it for anything with Russian copy.
+- **Bricolage Grotesque** (`--font-display`, `font-display` utility) — display accents
+  only: the logo wordmark and large monetary figures. It has **no Cyrillic**, so its
+  stack falls back to Onest per-glyph — don't rely on it for Russian headings.
+
+Design tokens live in `src/app/globals.css` (`:root`): a warm off-white surface with
+graphite ink, a single sky-blue `--brand` accent, a dark `--sidebar`, and pastel
+`--success` / `--danger` status colors. Money is rendered with `tabular-nums` (the
+`.nums` utility) via the helpers in `src/shared/lib/format.ts`.
 
 ## Component library — shadcn/ui
 
