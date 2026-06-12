@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Plus } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { Modal } from "@/shared/ui/modal";
 import { CreateCategoryForm } from "./create-category-form";
@@ -20,6 +21,7 @@ export function CreateCategoryDialog({
   return (
     <>
       <Button size="sm" onClick={() => setOpen(true)}>
+        <Plus className="size-4" />
         Добавить
       </Button>
 

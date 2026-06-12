@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/ui/card";
 import { CategoryCard } from "@/entities/category";
 import { CreateCategoryDialog } from "@/features/create-category";
 import { useCategories } from "../model/use-categories";
@@ -16,38 +10,39 @@ export function CategoryList() {
   const items = categories ?? [];
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-xl">Категории</CardTitle>
+    <section className="rounded-3xl border border-border/70 bg-card p-6 shadow-soft">
+      <div className="flex items-center justify-between">
+        <h2 className="font-display text-lg font-semibold tracking-tight">
+          Категории
+        </h2>
         <CreateCategoryDialog onCreated={refetch} />
-      </CardHeader>
-      <CardContent>
+      </div>
+
+      <div className="mt-5">
         {loading && (
-          <p className="py-6 text-center text-sm text-muted-foreground">
+          <p className="py-10 text-center text-sm text-muted-foreground">
             Загрузка…
           </p>
         )}
 
         {!loading && error && (
-          <p className="py-6 text-center text-sm text-destructive">{error}</p>
+          <p className="py-10 text-center text-sm text-danger">{error}</p>
         )}
 
         {!loading && !error && items.length === 0 && (
-          <p className="py-6 text-center text-sm text-muted-foreground">
+          <p className="py-10 text-center text-sm text-muted-foreground">
             Категорий пока нет
           </p>
         )}
 
         {!loading && !error && items.length > 0 && (
-          <ul className="divide-y">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((category) => (
-              <li key={category.id}>
-                <CategoryCard category={category} />
-              </li>
+              <CategoryCard key={category.id} category={category} />
             ))}
-          </ul>
+          </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   );
 }

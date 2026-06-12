@@ -58,10 +58,13 @@ npm run prisma:migrate -- --name <name>   # create + apply a dev migration
 npm run prisma:studio            # Prisma Studio
 
 npm run typecheck -w <workspace> # tsc --noEmit in any workspace
+npm test -w apps/frontend        # Jest unit tests (apps/frontend)
 ```
 
-There is no test runner wired up in any workspace yet — don't claim tests pass
-without first adding one.
+`apps/frontend` runs unit tests on **Jest** (`ts-jest` + Testing Library, jsdom);
+specs live next to the source as `*.test.tsx`. Other workspaces have no test runner
+wired up yet — don't claim tests pass there without first adding one, and never claim
+any suite passes without running it.
 
 ## Environment
 

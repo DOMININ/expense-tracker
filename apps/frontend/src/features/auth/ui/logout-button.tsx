@@ -1,10 +1,25 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/shared/ui/button";
+import { Button, type ButtonProps } from "@/shared/ui/button";
 import { sessionModel } from "@/entities/session";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+  variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
+  className?: string;
+  children?: ReactNode;
+  "aria-label"?: string;
+}
+
+export function LogoutButton({
+  variant = "ghost",
+  size = "sm",
+  className,
+  children = "Выйти",
+  ...props
+}: LogoutButtonProps) {
   const router = useRouter();
 
   const handleLogout = () => {
@@ -13,8 +28,14 @@ export function LogoutButton() {
   };
 
   return (
-    <Button variant="ghost" size="sm" onClick={handleLogout}>
-      Выйти
+    <Button
+      variant={variant}
+      size={size}
+      className={className}
+      onClick={handleLogout}
+      {...props}
+    >
+      {children}
     </Button>
   );
 }

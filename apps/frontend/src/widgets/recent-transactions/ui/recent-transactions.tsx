@@ -1,80 +1,95 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/shared/ui/button";
+import { cn } from "@/shared/lib/utils";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/shared/ui/card";
-import { TransactionCard } from "@/entities/transaction";
+  TransactionCard,
+  TRANSACTION_ROW_GRID,
+  transactionsRefresh,
+} from "@/entities/transaction";
 import { CreateTransactionDialog } from "@/features/create-transaction";
 import { useRecentTransactions } from "../model/use-recent-transactions";
 
-export function RecentTransactions() {
-  const { data, loading, error, page, setPage, refetch } =
-    useRecentTransactions();
+export function RecentTransactions({ title = "Последние транзакции" }: { title?: string }) {
+  const { data, loading, error, page, setPage } = useRecentTransactions();
 
   const totalPages = data?.totalPages ?? 1;
   const items = data?.items ?? [];
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0">
-        <CardTitle className="text-xl">Последние транзакции</CardTitle>
-        <CreateTransactionDialog onCreated={refetch} />
-      </CardHeader>
-      <CardContent>
-        {loading && (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            Загрузка…
-          </p>
-        )}
+    <section className="rounded-3xl border border-border/70 bg-card p-6 shadow-soft">
+      <div className="flex items-center justify-between">
+        <h2 className="font-display text-lg font-semibold tracking-tight">
+          {title}
+        </h2>
+        <CreateTransactionDialog onCreated={() => transactionsRefresh.bump()} />
+      </div>
 
-        {!loading && error && (
-          <p className="py-6 text-center text-sm text-destructive">{error}</p>
+      {/* Column header */}
+      <div
+        className={cn(
+          TRANSACTION_ROW_GRID,
+          "mt-5 border-b border-border pb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground",
         )}
+      >
+        <span>Операция</span>
+        <span className="hidden sm:block">Дата</span>
+        <span className="hidden sm:block">Тип</span>
+        <span className="text-right">Сумма</span>
+      </div>
 
-        {!loading && !error && items.length === 0 && (
-          <p className="py-6 text-center text-sm text-muted-foreground">
-            Транзакций пока нет
-          </p>
-        )}
+      {loading && (
+        <p className="py-10 text-center text-sm text-muted-foreground">
+          Загрузка…
+        </p>
+      )}
 
-        {!loading && !error && items.length > 0 && (
-          <>
-            <ul className="divide-y">
-              {items.map((transaction) => (
-                <li key={transaction.id}>
-                  <TransactionCard transaction={transaction} />
-                </li>
-              ))}
-            </ul>
+      {!loading && error && (
+        <p className="py-10 text-center text-sm text-danger">{error}</p>
+      )}
 
-            <div className="mt-4 flex items-center justify-between">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(page - 1)}
-                disabled={page <= 1}
-              >
-                Назад
-              </Button>
-              <span className="text-sm text-muted-foreground">
-                Стр. {page} из {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage(page + 1)}
-                disabled={page >= totalPages}
-              >
-                Вперёд
-              </Button>
-            </div>
-          </>
-        )}
-      </CardContent>
-    </Card>
+      {!loading && !error && items.length === 0 && (
+        <p className="py-10 text-center text-sm text-muted-foreground">
+          Транзакций пока нет
+        </p>
+      )}
+
+      {!loading && !error && items.length > 0 && (
+        <>
+          <ul className="divide-y divide-border">
+            {items.map((transaction) => (
+              <li key={transaction.id}>
+                <TransactionCard transaction={transaction} />
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-5 flex items-center justify-between">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(page - 1)}
+              disabled={page <= 1}
+            >
+              <ChevronLeft className="size-4" />
+              Назад
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              Стр. {page} из {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(page + 1)}
+              disabled={page >= totalPages}
+            >
+              Вперёд
+              <ChevronRight className="size-4" />
+            </Button>
+          </div>
+        </>
+      )}
+    </section>
   );
 }

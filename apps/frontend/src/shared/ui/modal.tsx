@@ -63,7 +63,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-foreground/40 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden
       />
@@ -73,10 +73,12 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
         aria-modal="true"
         aria-label={title}
         tabIndex={-1}
-        className="relative z-10 w-full max-w-md rounded-lg border bg-background p-6 shadow-lg focus:outline-none"
+        className="relative z-10 w-full max-w-md animate-fade-up rounded-3xl border border-border/70 bg-card p-6 shadow-card focus:outline-none"
       >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">{title}</h2>
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="font-display text-xl font-semibold tracking-tight">
+            {title}
+          </h2>
           <Button
             variant="ghost"
             size="sm"
